@@ -10,5 +10,4 @@ import lk.ijse.dep.web.institute.entity.Student;
  **/
 public interface StudentDAO extends CrudDAO<Student, Integer> {
 
-
 }

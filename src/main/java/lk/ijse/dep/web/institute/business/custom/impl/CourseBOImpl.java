@@ -2,26 +2,25 @@ package lk.ijse.dep.web.institute.business.custom.impl;
 
 import lk.ijse.dep.web.institute.business.custom.CourseBO;
 import lk.ijse.dep.web.institute.business.util.EntityDTOMapper;
-import lk.ijse.dep.web.institute.dao.DAOFactory;
-import lk.ijse.dep.web.institute.dao.DAOTypes;
 import lk.ijse.dep.web.institute.dao.custom.CourseDAO;
 import lk.ijse.dep.web.institute.dto.CourseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.util.List;
 
-/**
- * @author : Lucky Prabath <lucky.prabath94@gmail.com>
- * @since : 2021-02-01
- **/
+@Component
 public class CourseBOImpl implements CourseBO {
-
-    private final CourseDAO courseDAO;
+    @Autowired
+    private CourseDAO courseDAO;
     private EntityManager em;
-    private final EntityDTOMapper mapper = EntityDTOMapper.instance;
+    @Autowired
+    private EntityDTOMapper mapper;
 
     public CourseBOImpl() {
-        courseDAO = DAOFactory.getInstance().getDAO(DAOTypes.COURSE);
+
     }
 
     @Override
@@ -31,39 +30,21 @@ public class CourseBOImpl implements CourseBO {
     }
 
     @Override
+    @Transactional
     public void saveCourse(CourseDTO dto) throws Exception {
-        try {
-            em.getTransaction().begin();
             courseDAO.save(mapper.getCourse(dto));
-            em.getTransaction().commit();
-        }catch (Throwable t){
-            em.getTransaction().rollback();
-            throw t;
         }
-    }
 
+    @Transactional
     @Override
     public void updateCourse(CourseDTO dto) throws Exception {
-        try {
-            em.getTransaction().begin();
-            courseDAO.update(mapper.getCourse(dto));
-            em.getTransaction().commit();
-        }catch (Throwable t){
-            em.getTransaction().rollback();
-            throw t;
-        }
-    }
 
+            courseDAO.update(mapper.getCourse(dto));
+    }
+    @Transactional
     @Override
     public void deleteCourse(String courseId) throws Exception {
-        try {
-            em.getTransaction().begin();
             courseDAO.delete(courseId);
-            em.getTransaction().commit();
-        }catch (Throwable t){
-            em.getTransaction().rollback();
-            throw t;
-        }
     }
 
     @Override

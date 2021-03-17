@@ -1,11 +1,8 @@
 package lk.ijse.dep.web.institute.api;
 
-import lk.ijse.dep.web.institute.business.BOFactory;
-import lk.ijse.dep.web.institute.business.BOTypes;
-import lk.ijse.dep.web.institute.business.custom.StudentBO;
+import lk.ijse.dep.web.institute.AppInitializer;
 import lk.ijse.dep.web.institute.business.custom.StudentCourseBO;
 import lk.ijse.dep.web.institute.dto.StudentCourseDTO;
-import lk.ijse.dep.web.institute.dto.StudentDTO;
 import lk.ijse.dep.web.institute.exception.HttpResponseException;
 import lk.ijse.dep.web.institute.exception.ResponseExceptionUtil;
 
@@ -20,7 +17,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * @author : Lucky Prabath <lucky.prabath94@gmail.com>
@@ -52,7 +48,7 @@ public class StudentCourseServlet extends HttpServlet {
                 throw new HttpResponseException(400, "Invalid registration details", null);
             }
 
-            StudentCourseBO studentCourseBO = BOFactory.getInstance().getBO(BOTypes.STUDENTCOURSE);
+            StudentCourseBO studentCourseBO = AppInitializer.getContext().getBean(StudentCourseBO.class);
             studentCourseBO.setEntityManager(em);
             studentCourseBO.register(dto);
             resp.setStatus(HttpServletResponse.SC_CREATED);

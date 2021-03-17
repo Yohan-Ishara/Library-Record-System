@@ -13,10 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-/**
- * @author : Lucky Prabath <lucky.prabath94@gmail.com>
- * @since : 2021-02-01
- **/
+
 @WebListener
 public class ContextListener implements ServletContextListener {
 
@@ -26,6 +23,12 @@ public class ContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+
+        try {
+            Class.forName("lk.ijse.web.institute.AppInitializer");
+        } catch (ClassNotFoundException exception) {
+            logger.error("Failed to load spring container",exception);
+        }
         Properties prop = new Properties();
         try {
             logger.info("Session factory has initialized");
