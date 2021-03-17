@@ -33,7 +33,7 @@ public class JPAConfig {
         LocalContainerEntityManagerFactoryBean lcemfb = new LocalContainerEntityManagerFactoryBean();
         lcemfb.setDataSource(dataSource);
         lcemfb.setJpaVendorAdapter(jpaVendorAdapter);
-        lcemfb.setPackagesToScan("lk.ijse.dep.web.pos.entity");
+        lcemfb.setPackagesToScan("lk.ijse.dep.web.institute.entity");
         return lcemfb;
     }
 
