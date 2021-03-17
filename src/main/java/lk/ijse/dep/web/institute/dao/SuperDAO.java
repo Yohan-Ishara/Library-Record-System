@@ -7,6 +7,5 @@ import javax.persistence.EntityManager;
  * @since : 2021-02-01
  **/
 public interface SuperDAO {
-
-    void setEntityManager(EntityManager em);
+  EntityManager getEntityManager();
 }

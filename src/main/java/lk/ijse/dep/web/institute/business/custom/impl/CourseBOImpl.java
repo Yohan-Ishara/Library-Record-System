@@ -5,13 +5,15 @@ import lk.ijse.dep.web.institute.business.util.EntityDTOMapper;
 import lk.ijse.dep.web.institute.dao.custom.CourseDAO;
 import lk.ijse.dep.web.institute.dto.CourseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+
 import java.util.List;
 
-@Component
+@Service
+@Transactional
 public class CourseBOImpl implements CourseBO {
     @Autowired
     private CourseDAO courseDAO;
@@ -23,11 +25,6 @@ public class CourseBOImpl implements CourseBO {
 
     }
 
-    @Override
-    public void setEntityManager(EntityManager em) {
-        this.em = em;
-        courseDAO.setEntityManager(em);
-    }
 
     @Override
     @Transactional
@@ -47,6 +44,7 @@ public class CourseBOImpl implements CourseBO {
             courseDAO.delete(courseId);
     }
 
+   @Transactional(readOnly = true)
     @Override
     public List<CourseDTO> getAllCourses() throws Exception {
         try {

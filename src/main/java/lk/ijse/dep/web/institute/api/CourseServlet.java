@@ -38,58 +38,22 @@ public class CourseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Jsonb jsonb = JsonbBuilder.create();
-        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
-        EntityManager em = emf.createEntityManager();
+
 
         try {
             resp.setContentType("application/json");
             CourseBO courseBO = AppInitializer.getContext().getBean(CourseBO.class);
-            courseBO.setEntityManager(em);
             resp.getWriter().println(jsonb.toJson(courseBO.getAllCourses()));
         } catch (Throwable t) {
             ResponseExceptionUtil.handle(t, resp);
-        }finally {
-            em.close();
-        }
-    }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Jsonb jsonb = JsonbBuilder.create();
-        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
-        EntityManager em = emf.createEntityManager();
+    }}
 
-        try {
-            CourseDTO dto =  jsonb.fromJson(req.getReader(), CourseDTO.class);
 
-            if(dto.getCode().trim().isEmpty() || dto.getDescription().trim().isEmpty() || dto.getDuration().trim().isEmpty() ||
-                    dto.getAudience() == null){
-                throw new HttpResponseException(400, "Invalid course details", null);
-            }
-
-            CourseBO courseBO = AppInitializer.getContext().getBean(CourseBO.class);
-            courseBO.setEntityManager(em);
-            courseBO.saveCourse(dto);
-            resp.setStatus(HttpServletResponse.SC_CREATED);
-            resp.setContentType("application/json");
-            resp.getWriter().println(jsonb.toJson(dto));
-        }catch (SQLIntegrityConstraintViolationException exp){
-            throw  new HttpResponseException(400, "Duplicate entry", exp);
-        }catch (JsonbException exp){
-            throw  new HttpResponseException(400, "Failed to read the json", exp);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }finally {
-            em.close();
-        }
-    }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Jsonb jsonb = JsonbBuilder.create();
-        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
-        EntityManager em = emf.createEntityManager();
-
         try{
             if(req.getPathInfo() == null || req.getPathInfo().replace("/", "").trim().isEmpty()){
                 throw new HttpResponseException(400, "Invalid course id", null);
@@ -104,7 +68,6 @@ public class CourseServlet extends HttpServlet {
             }
 
             CourseBO courseBO = AppInitializer.getContext().getBean(CourseBO.class);
-            courseBO.setEntityManager(em);
             dto.setCode(id);  // correction for update
             courseBO.updateCourse(dto);
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -112,15 +75,11 @@ public class CourseServlet extends HttpServlet {
             throw new HttpResponseException(400, "Failed to read the json", exp);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }finally {
-            em.close();
-        }
-    }
+    }}
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
-        EntityManager em = emf.createEntityManager();
+
 
         try{
 
@@ -131,13 +90,38 @@ public class CourseServlet extends HttpServlet {
             String id = req.getPathInfo().replace("/", "");
 
             CourseBO courseBO = AppInitializer.getContext().getBean(CourseBO.class);
-            courseBO.setEntityManager(em);
             courseBO.deleteCourse(id);
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }finally {
-            em.close();
+
+        }
+}
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Jsonb jsonb = JsonbBuilder.create();
+
+        try {
+            CourseDTO dto = jsonb.fromJson(req.getReader(), CourseDTO.class);
+
+            if (dto.getCode().trim().isEmpty() || dto.getDescription().trim().isEmpty() || dto.getDuration().trim().isEmpty() ||
+                    dto.getAudience() == null) {
+                throw new HttpResponseException(400, "Invalid course details", null);
+            }
+
+            CourseBO courseBO = AppInitializer.getContext().getBean(CourseBO.class);
+            courseBO.saveCourse(dto);
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+            resp.setContentType("application/json");
+            resp.getWriter().println(jsonb.toJson(dto));
+        } catch (SQLIntegrityConstraintViolationException exp) {
+            throw new HttpResponseException(400, "Duplicate entry", exp);
+        } catch (JsonbException exp) {
+            throw new HttpResponseException(400, "Failed to read the json", exp);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

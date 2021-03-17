@@ -37,8 +37,7 @@ public class StudentCourseServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Jsonb jsonb = JsonbBuilder.create();
-        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
-        EntityManager em = emf.createEntityManager();
+
 
         try {
             StudentCourseDTO dto = jsonb.fromJson(req.getReader(), StudentCourseDTO.class);
@@ -49,24 +48,15 @@ public class StudentCourseServlet extends HttpServlet {
             }
 
             StudentCourseBO studentCourseBO = AppInitializer.getContext().getBean(StudentCourseBO.class);
-            studentCourseBO.setEntityManager(em);
             studentCourseBO.register(dto);
             resp.setStatus(HttpServletResponse.SC_CREATED);
             resp.setContentType("application/json");
             resp.getWriter().println(jsonb.toJson(dto));
-        }catch (JsonbException exp) {
+        } catch (JsonbException exp) {
             throw new HttpResponseException(400, "Failed to read the JSON", exp);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }finally {
-            em.close();
         }
+
     }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //todo:complete method for edit the registrations
-    }
-
-
 }

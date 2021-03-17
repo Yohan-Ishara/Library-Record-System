@@ -9,6 +9,6 @@ import lk.ijse.dep.web.institute.dto.StudentCourseDTO;
  **/
 public interface StudentCourseBO extends SuperBO {
 
-    public void register(StudentCourseDTO dto);
+    public void register(StudentCourseDTO dto) throws Exception;
     //todo: check this method to register course with student
 }

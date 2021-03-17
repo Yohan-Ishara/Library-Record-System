@@ -39,25 +39,21 @@ public class StudentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Jsonb jsonb = JsonbBuilder.create();
-        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
-        EntityManager em = emf.createEntityManager();
+
         try{
             resp.setContentType("application/json");
             StudentBO studentBO = AppInitializer.getContext().getBean(StudentBO.class);
-            studentBO.setEntityManager(em);
+
             resp.getWriter().println(jsonb.toJson(studentBO.getAllStudents()));
         } catch (Throwable t) {
             ResponseExceptionUtil.handle(t, resp);
-        } finally {
-            em.close();
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Jsonb jsonb = JsonbBuilder.create();
-        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
-        EntityManager em = emf.createEntityManager();
+
 
         try{
             StudentDTO dto = jsonb.fromJson(req.getReader(), StudentDTO.class);
@@ -69,7 +65,7 @@ public class StudentServlet extends HttpServlet {
             }
 
             StudentBO studentBO = AppInitializer.getContext().getBean(StudentBO.class);
-            studentBO.setEntityManager(em);
+
             studentBO.saveStudent(dto);
             resp.setStatus(HttpServletResponse.SC_CREATED);
             resp.setContentType("application/json");
@@ -80,15 +76,12 @@ public class StudentServlet extends HttpServlet {
             throw new HttpResponseException(400, "Failed to read the JSON", exp);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }finally {
-            em.close();
         }
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
-        EntityManager em = emf.createEntityManager();
+
 
         try{
             if (req.getPathInfo() == null || req.getPathInfo().replace("/", "").trim().isEmpty()) {
@@ -106,7 +99,7 @@ public class StudentServlet extends HttpServlet {
             }
 
             StudentBO studentBO =AppInitializer.getContext().getBean(StudentBO.class);
-            studentBO.setEntityManager(em);
+
             dto.setId(Integer.parseInt(id));
             studentBO.updateStudent(dto);
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -115,15 +108,12 @@ public class StudentServlet extends HttpServlet {
             throw new HttpResponseException(400, "Failed to read the JSON", exp);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            em.close();
         }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final EntityManagerFactory emf = (EntityManagerFactory) getServletContext().getAttribute("emf");
-        EntityManager em = emf.createEntityManager();
+
         try{
 
             if (req.getPathInfo() == null || req.getPathInfo().replace("/", "").trim().isEmpty()) {
@@ -133,14 +123,12 @@ public class StudentServlet extends HttpServlet {
             String id = req.getPathInfo().replace("/", "");
 
             StudentBO studentBO = AppInitializer.getContext().getBean(StudentBO.class);
-            studentBO.setEntityManager(em);
+
             studentBO.deleteStudent(Integer.parseInt(id));
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            em.close();
         }
     }
 
