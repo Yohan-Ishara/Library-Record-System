@@ -1,6 +1,5 @@
 package lk.ijse.dep.web.institute.listner;
 
-import lk.ijse.dep.web.institute.util.JPAUtil;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
