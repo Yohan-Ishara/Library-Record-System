@@ -5,13 +5,15 @@ import lk.ijse.dep.web.institute.business.util.EntityDTOMapper;
 import lk.ijse.dep.web.institute.dao.custom.StudentCourseDAO;
 import lk.ijse.dep.web.institute.dto.StudentCourseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
-/**
- * @author : Lucky Prabath <lucky.prabath94@gmail.com>
- * @since : 2021-02-03
- **/
+
+
+@Service
+@Transactional
 public class StudentCourseBOImpl implements StudentCourseBO {
 
     private EntityManager em;
@@ -25,21 +27,8 @@ public class StudentCourseBOImpl implements StudentCourseBO {
     }
 
     @Override
-    public void setEntityManager(EntityManager em) {
-        this.em = em;
-        studentCourseDAO.setEntityManager(em);
-    }
-
-    @Override
-    public void register(StudentCourseDTO dto) {
-        try {
-            em.getTransaction().begin();
+    public void register(StudentCourseDTO dto) throws Exception {
             studentCourseDAO.save(mapper.getStudentCourse(dto));
-            em.getTransaction().commit();
-        }catch (Throwable t){
-            em.getTransaction().rollback();
-            throw new RuntimeException(t);
-        }
     }
 
     //todo:- check whole class
