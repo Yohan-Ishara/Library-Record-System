@@ -25,10 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
-/**
- * @author : Lucky Prabath <lucky.prabath94@gmail.com>
- * @since : 2021-02-04
- **/
 @WebServlet(name = "CourseServlet",urlPatterns = "/api/v1/courses/*")
 public class CourseServlet extends HttpServlet {
 
