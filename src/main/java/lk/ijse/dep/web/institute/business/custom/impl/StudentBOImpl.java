@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-@Service
+@Component
 @Transactional
 public class StudentBOImpl implements StudentBO {
     @Autowired

@@ -5,6 +5,7 @@ import lk.ijse.dep.web.institute.business.util.EntityDTOMapper;
 import lk.ijse.dep.web.institute.dao.custom.CourseDAO;
 import lk.ijse.dep.web.institute.dto.CourseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +13,7 @@ import javax.persistence.EntityManager;
 
 import java.util.List;
 
-@Service
+@Component
 @Transactional
 public class CourseBOImpl implements CourseBO {
     @Autowired
