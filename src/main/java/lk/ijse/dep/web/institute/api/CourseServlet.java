@@ -1,7 +1,6 @@
 package lk.ijse.dep.web.institute.api;
 
-import lk.ijse.dep.web.institute.business.BOFactory;
-import lk.ijse.dep.web.institute.business.BOTypes;
+import lk.ijse.dep.web.institute.AppInitializer;
 import lk.ijse.dep.web.institute.business.custom.CourseBO;
 import lk.ijse.dep.web.institute.dto.CourseDTO;
 import lk.ijse.dep.web.institute.exception.HttpResponseException;
@@ -14,10 +13,7 @@ import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +43,7 @@ public class CourseServlet extends HttpServlet {
 
         try {
             resp.setContentType("application/json");
-            CourseBO courseBO = BOFactory.getInstance().getBO(BOTypes.COURSE);
+            CourseBO courseBO = AppInitializer.getContext().getBean(CourseBO.class);
             courseBO.setEntityManager(em);
             resp.getWriter().println(jsonb.toJson(courseBO.getAllCourses()));
         } catch (Throwable t) {
@@ -71,7 +67,7 @@ public class CourseServlet extends HttpServlet {
                 throw new HttpResponseException(400, "Invalid course details", null);
             }
 
-            CourseBO courseBO = BOFactory.getInstance().getBO(BOTypes.COURSE);
+            CourseBO courseBO = AppInitializer.getContext().getBean(CourseBO.class);
             courseBO.setEntityManager(em);
             courseBO.saveCourse(dto);
             resp.setStatus(HttpServletResponse.SC_CREATED);
@@ -107,7 +103,7 @@ public class CourseServlet extends HttpServlet {
                 throw  new HttpResponseException(400, "Invalid details", null);
             }
 
-            CourseBO courseBO = BOFactory.getInstance().getBO(BOTypes.COURSE);
+            CourseBO courseBO = AppInitializer.getContext().getBean(CourseBO.class);
             courseBO.setEntityManager(em);
             dto.setCode(id);  // correction for update
             courseBO.updateCourse(dto);
@@ -134,7 +130,7 @@ public class CourseServlet extends HttpServlet {
 
             String id = req.getPathInfo().replace("/", "");
 
-            CourseBO courseBO = BOFactory.getInstance().getBO(BOTypes.COURSE);
+            CourseBO courseBO = AppInitializer.getContext().getBean(CourseBO.class);
             courseBO.setEntityManager(em);
             courseBO.deleteCourse(id);
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

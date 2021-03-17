@@ -1,8 +1,8 @@
 package lk.ijse.dep.web.institute.api;
 
-import lk.ijse.dep.web.institute.business.BOFactory;
-import lk.ijse.dep.web.institute.business.BOTypes;
+import lk.ijse.dep.web.institute.AppInitializer;
 import lk.ijse.dep.web.institute.business.custom.StudentBO;
+import lk.ijse.dep.web.institute.business.custom.StudentCourseBO;
 import lk.ijse.dep.web.institute.dto.StudentDTO;
 import lk.ijse.dep.web.institute.exception.HttpResponseException;
 import lk.ijse.dep.web.institute.exception.ResponseExceptionUtil;
@@ -43,7 +43,7 @@ public class StudentServlet extends HttpServlet {
         EntityManager em = emf.createEntityManager();
         try{
             resp.setContentType("application/json");
-            StudentBO studentBO = BOFactory.getInstance().getBO(BOTypes.STUDENT);
+            StudentBO studentBO = AppInitializer.getContext().getBean(StudentBO.class);
             studentBO.setEntityManager(em);
             resp.getWriter().println(jsonb.toJson(studentBO.getAllStudents()));
         } catch (Throwable t) {
@@ -68,7 +68,7 @@ public class StudentServlet extends HttpServlet {
                 throw new HttpResponseException(400, "Invalid student details", null);
             }
 
-            StudentBO studentBO = BOFactory.getInstance().getBO(BOTypes.STUDENT);
+            StudentBO studentBO = AppInitializer.getContext().getBean(StudentBO.class);
             studentBO.setEntityManager(em);
             studentBO.saveStudent(dto);
             resp.setStatus(HttpServletResponse.SC_CREATED);
@@ -105,7 +105,7 @@ public class StudentServlet extends HttpServlet {
                 throw new HttpResponseException(400, "Invalid details", null);
             }
 
-            StudentBO studentBO = BOFactory.getInstance().getBO(BOTypes.STUDENT);
+            StudentBO studentBO =AppInitializer.getContext().getBean(StudentBO.class);
             studentBO.setEntityManager(em);
             dto.setId(Integer.parseInt(id));
             studentBO.updateStudent(dto);
@@ -132,7 +132,7 @@ public class StudentServlet extends HttpServlet {
 
             String id = req.getPathInfo().replace("/", "");
 
-            StudentBO studentBO = BOFactory.getInstance().getBO(BOTypes.STUDENT);
+            StudentBO studentBO = AppInitializer.getContext().getBean(StudentBO.class);
             studentBO.setEntityManager(em);
             studentBO.deleteStudent(Integer.parseInt(id));
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
